@@ -1,24 +1,20 @@
 #!flask/bin/python
 
 from flask import Flask
-from flask import jsonify 
+from flask import jsonify
 from flask_restful import Api, Resource, reqparse
 
 import pygit2 as git
 import os
 import shutil
+import sys
 
 app = Flask(__name__)
 api = Api(app)
 
-def copy_directory_except_one_subdirectory(src, dst, ignore):
-    for root, dirs, files in os.walk(src):
-        if ignore not in root:
-            for f in files:
-                shutil.copy(os.path.join(root, f), os.path.join(root, f).replace(src, dst, 1))        
-            for d in dirs:
-                if d != ignore:
-                    os.makedirs(os.path.join(root, d).replace(src, dst, 1))
+def copy_directory_except_git(src, dst):
+    ignore_patterns = ('.git/*', '.git')
+    shutil.copytree(src, dst, symlinks=False,  ignore=shutil.ignore_patterns(*ignore_patterns))
 
 class AnonymizeAPI(Resource):
     def __init__(self):
@@ -43,7 +39,10 @@ class Anonymizer(object):
         self.result = {}
 
     def anonymize(self):
-        self.result = {'anonymous_url': 'shasdflk', 'success': True}
+        cred= git.UserPass("Anonymous-Katas", "v~LD%%r*j!~VT94L")
+        callbacks = pygit2.RemoteCallbacks(credentials = cred)
+        git.clone_repository(self.request.url, "./local_copy", bare=False, callbacks = callbacks)
+        #self.result = {'anonymous_url': 'shasdflk', 'success': True}
 
     def get_result(self):
         return self.result
@@ -54,3 +53,4 @@ api.add_resource(AnonymizeAPI, '/api/v1.0/anonymize', endpoint = 'anonymize')
 
 if __name__ == '__main__':
     app.run(debug=True)
+    sys.exit(0)
