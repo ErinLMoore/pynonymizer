@@ -9,12 +9,17 @@ import os
 import shutil
 import sys
 
+#from set_credentials import set_credentials
+
 app = Flask(__name__)
 api = Api(app)
 
 def copy_directory_except_git(src, dst):
     ignore_patterns = ('.git/*', '.git')
     shutil.copytree(src, dst, symlinks=False,  ignore=shutil.ignore_patterns(*ignore_patterns))
+
+def delete_directory(src):
+    shutil.rmtree(src, ignore_errors = True)
 
 class AnonymizeAPI(Resource):
     def __init__(self):
@@ -37,12 +42,21 @@ class Anonymizer(object):
     def __init__(self, request):
         self.request = request
         self.result = {}
+        from set_credentials import git_username, git_password
+        self.username, self.password = git_username, git_password
 
     def anonymize(self):
-        cred= git.UserPass("Anonymous-Katas", "v~LD%%r*j!~VT94L")
-        callbacks = pygit2.RemoteCallbacks(credentials = cred)
+        cred= git.UserPass(self.username, self.password)
+        callbacks = git.RemoteCallbacks(credentials = cred)
         git.clone_repository(self.request.url, "./local_copy", bare=False, callbacks = callbacks)
-        #self.result = {'anonymous_url': 'shasdflk', 'success': True}
+        original_repo = git.Repository("./local_copy/.git")
+        for commit in original_repo.walk(original_repo.head.target, git.GIT_SORT_TOPOLOGICAL):
+            print (commit.tree_id)
+            original_repo.checkout_tree(treeish = commit, strategy = 4)
+            #copy_directory_except_git("./local_copy", "./"+commit.tree_id)
+            #raise GitError(message)
+        delete_directory("./local_copy")
+        self.result = {'anonymous_url': 'shasdflk', 'success': True}
 
     def get_result(self):
         return self.result
