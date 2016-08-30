@@ -9,8 +9,6 @@ import os
 import shutil
 import sys
 
-#from set_credentials import set_credentials
-
 app = Flask(__name__)
 api = Api(app)
 
