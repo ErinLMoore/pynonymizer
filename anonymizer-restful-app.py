@@ -109,10 +109,10 @@ class Anonymizer(object):
             parent = [copy_repo.head.get_object().hex]
             counter += 1
 
-        original_repo.remotes.set_url("origin", "https://github.com/{0}/{1}.git".format(self.username, anonymous_name))
-        remote = original_repo.remotes["origin"]
+        copy_repo.create_remote("origin", "https://github.com/{0}/{1}.git".format(self.username, anonymous_name))
+        remote = copy_repo.remotes["origin"]
         remote.push(['refs/heads/master:refs/heads/master'], callbacks = callbacks)
-        
+
         self.result = {'anonymous_url': anonymous_name, 'success': True}
         delete_directory("./local_copy")
         delete_directory("./anonymous_copy")
