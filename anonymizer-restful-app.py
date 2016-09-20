@@ -82,14 +82,24 @@ class Anonymizer(object):
         self.result = {}
         self.username, self.password = git_username, git_password
 
+    def recursive_blob_crawl(self, rootdir, repo):
+        for root, directories, filenames in os.walk(rootdir):
+            for directory in directories:
+                for filename in filenames:
+                    blob= repo.create_blob_fromdisk(os.path.join(root,filename))
+                    blob_data = repo.read(blob)
+                    repo.write(blob_data[0], blob_data[1])
+            for filename in filenames:
+                blob= repo.create_blob_fromdisk(os.path.join(root,filename))
+                blob_data = repo.read(blob)
+                repo.write(blob_data[0], blob_data[1])
+
     def anonymize(self, anonymous_name):
         cred= git.UserPass(self.username, self.password)
         callbacks = git.RemoteCallbacks(credentials = cred)
         git.clone_repository(self.request.url, "./local_copy", bare=False, callbacks = callbacks)
-        original_repo = git.Repository("./local_copy/.git")
-
+        original_repo = git.Repository("./local_copy")
         git.init_repository("./anonymous_copy", flags = git.GIT_REPOSITORY_INIT_MKDIR)
-
         committer = git.Signature('Anonymous', 'anonymous@example.com')
         author = git.Signature('Anonymous', 'anonymous@example.com')
         parent = []
@@ -97,9 +107,11 @@ class Anonymizer(object):
         for commit in original_repo.walk(original_repo.head.target, git.GIT_SORT_TOPOLOGICAL):
             original_repo.checkout_tree(treeish = commit, strategy = git.GIT_CHECKOUT_ALLOW_CONFLICTS)
             copy_directory_except_git("./local_copy", "./anonymous_copy")
-            copy_repo = git.Repository("./anonymous_copy/.git")
-
-            tree = copy_repo.TreeBuilder().write()
+            copy_repo = git.Repository("./anonymous_copy/")
+            index = copy_repo.index
+            index.add_all()
+            index.write()
+            tree = index.write_tree()
             copy_repo.create_commit(
             'refs/heads/master', # the name of the reference to update
             author, committer, 'commit #' + str(counter),
@@ -110,8 +122,7 @@ class Anonymizer(object):
             counter += 1
 
         copy_repo.create_remote("origin", "https://github.com/{0}/{1}.git".format(self.username, anonymous_name))
-        remote = copy_repo.remotes["origin"]
-        remote.push(['refs/heads/master:refs/heads/master'], callbacks = callbacks)
+        copy_repo.remotes["origin"].push(['refs/heads/master:refs/heads/master'], callbacks = callbacks)
 
         self.result = {'anonymous_url': anonymous_name, 'success': True}
         delete_directory("./local_copy")
