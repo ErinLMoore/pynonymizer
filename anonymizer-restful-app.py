@@ -82,18 +82,6 @@ class Anonymizer(object):
         self.result = {}
         self.username, self.password = git_username, git_password
 
-    def recursive_blob_crawl(self, rootdir, repo):
-        for root, directories, filenames in os.walk(rootdir):
-            for directory in directories:
-                for filename in filenames:
-                    blob= repo.create_blob_fromdisk(os.path.join(root,filename))
-                    blob_data = repo.read(blob)
-                    repo.write(blob_data[0], blob_data[1])
-            for filename in filenames:
-                blob= repo.create_blob_fromdisk(os.path.join(root,filename))
-                blob_data = repo.read(blob)
-                repo.write(blob_data[0], blob_data[1])
-
     def anonymize(self, anonymous_name):
         cred= git.UserPass(self.username, self.password)
         callbacks = git.RemoteCallbacks(credentials = cred)
