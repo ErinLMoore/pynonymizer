@@ -18,12 +18,16 @@ from .anonymizer import Anonymizer
 from app import app
 api = Api(app)
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     user = {'name': 'test'}  # fake user
 
     form = UrlForm()
+    if form.validate_on_submit():
+        flash('here is url="%s", &desc=%s' %
+            (form.submission_url.data, str(form.description.data)))
+    #else: flash(' you did summit wrong')
     return render_template('index.html',
                            user=user,
                            form=form)

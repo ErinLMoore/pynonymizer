@@ -11,6 +11,16 @@
       <p> and like a description:<br>
         {{ form.description(size=80) }}</p>
       <p><input type="submit" value="Sign In"></p>
+      <hr>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }} </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
   </form>
 
 {% endblock %}
