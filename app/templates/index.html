@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Hi, {{ user.name }}!</h1>
+    <h1>Let's Anonymize</h1>
+  <form action="" method="post" name="login">
+      {{ form.hidden_tag() }}
+      <p>
+          Please enter the kata url:<br>
+          {{ form.submission_url(size=80) }}<br>
+      </p>
+      <p> and like a description:<br>
+        {{ form.description(size=80) }}</p>
+      <p><input type="submit" value="Sign In"></p>
+  </form>
+
+{% endblock %}

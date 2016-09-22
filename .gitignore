@@ -1,3 +1,4 @@
 .DS_Store
 set_credentials.py
 *.pyc
+__pycache__

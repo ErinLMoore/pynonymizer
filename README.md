@@ -1,6 +1,14 @@
-Relies on Python packages `flask` and `flask-restful`. These can be install with pip.
+Relies on Python packages `flask` , `flask-restful`, `flask-wtf`, `pygit2`. These can be install with pip.
 
-To run: `python anonymizer-restful-app.py` or `python3 anonymizer-restful-app.py` will start the server.
+
+to set up virtual environment, assuming python 3:
+* pyvenv flask
+* flask/bin/pip3 install flask-restful
+* flask/bin/pip3 install flask-wtf
+* flask/bin/pip3 installrequests
+* flask/bin/pip3 install pygit2
+
+To run: `python run.py` or `python3 run.py` will start the server.
 
 Then curl:
 
