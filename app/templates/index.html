@@ -7,9 +7,15 @@
       <p>
           Please enter the kata url:<br>
           {{ form.submission_url(size=80) }}<br>
+          {% for error in form.submission_url.errors %}
+           <span style="color: red;">[{{ error }}]</span>
+         {% endfor %}<br>
       </p>
       <p> and like a description:<br>
         {{ form.description(size=80) }}</p>
+        {% for error in form.description.errors %}
+           <span style="color: red;">[{{ error }}]</span>
+         {% endfor %}<br>
       <p><input type="submit" value="Sign In"></p>
       <hr>
       {% with messages = get_flashed_messages() %}

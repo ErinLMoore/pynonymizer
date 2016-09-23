@@ -1,4 +1,4 @@
-#!flask/bin/python
+#!flask/bin/python3
 
 import pygit2 as git
 import os
@@ -8,8 +8,8 @@ import sys
 from set_credentials import git_username, git_password, git_token
 
 class Anonymizer(object):
-    def __init__(self, request, anonymous_name):
-        self.request = request
+    def __init__(self, url_to_anonymize, anonymous_name):
+        self.url_to_anonymize = url_to_anonymize
         self.anonymous_name = anonymous_name
         self.result = {}
         self.local_copy = "./local_copy"
@@ -23,8 +23,9 @@ class Anonymizer(object):
             copy_repo = self.copy_repo_with_commits(original_repo)
         except:
             self.status_message = "error cloning and copying repo"
+        self.anonymous_url = "https://github.com/{0}/{1}.git".format(self.username, self.anonymous_name)
         self.push_copy_repo(copy_repo)
-        self.result = {'anonymous_url': self.anonymous_name, 'status_message': self.status_message}
+        self.result = {'anonymous_url': self.anonymous_url, 'status_message': self.status_message}
         self.clean_up_directories()
 
     def get_result(self):
@@ -49,13 +50,13 @@ class Anonymizer(object):
         return copy_repo
 
     def clone_a_repo(self):
-        git.clone_repository(self.request.url, self.local_copy , bare=False, callbacks = self.credentials)
+        git.clone_repository(self.url_to_anonymize, self.local_copy , bare=False, callbacks = self.credentials)
         original_repo = git.Repository(self.local_copy)
         return original_repo
 
     def push_copy_repo(self, copy_repo):
         try:
-            copy_repo.create_remote("origin", "https://github.com/{0}/{1}.git".format(self.username, self.anonymous_name))
+            copy_repo.create_remote("origin", self.anonymous_url)
             copy_repo.remotes["origin"].push(['refs/heads/master:refs/heads/master'], callbacks = self.credentials)
         except:
             self.status_message = "error pushing repo"

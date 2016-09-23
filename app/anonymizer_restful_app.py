@@ -1,8 +1,10 @@
-#!flask/bin/python
+#!flask/bin/python3
 
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from flask import flash
+from flask import redirect
 from flask_restful import Api, Resource, reqparse
 
 import requests
@@ -27,7 +29,8 @@ def index():
     if form.validate_on_submit():
         flash('here is url="%s", &desc=%s' %
             (form.submission_url.data, str(form.description.data)))
-    #else: flash(' you did summit wrong')
+        return redirect('/index')
+
     return render_template('index.html',
                            user=user,
                            form=form)
@@ -46,7 +49,7 @@ class AnonymizeAPI(Resource):
         anonymous_name = self.get_anonymous_name(request)
         try:
             self.create_github_repo(anonymous_name)
-            anonymizer = Anonymizer(request, anonymous_name)
+            anonymizer = Anonymizer(request.url, anonymous_name)
             anonymizer.anonymize()
             return anonymizer.get_result()
         except:
