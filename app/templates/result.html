@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>YOUR RESULT</h1>
-      {{result.anonymous_url}}  {{result.message}}<br />
-       <a href="/index">click here to try again</a>
+    <h2>Your result:</h2>
+      <h3> Anonymized URL: <a href={{result.anonymous_url}}>{{result.anonymous_url}}</a><br /> <br />
+        Status:   {{result.message}}</h3><br />
+       <a href="/index">click here to anonymize again</a>
 
 {% endblock %}

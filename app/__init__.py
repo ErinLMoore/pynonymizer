@@ -3,4 +3,4 @@ from flask import Flask
 
 app = Flask(__name__)
 app.config.from_object('config')
-from app import anonymizer_restful_app
+from app import anonymizer_flask_app

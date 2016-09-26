@@ -15,7 +15,7 @@ class Anonymizer(object):
         self.local_copy = "./local_copy"
         self.anonymous_copy = "./anonymous_copy"
         self.credentials = self.create_credential_callbacks()
-        self.status_message = "success"
+        self.status_message = "Successful"
 
     def anonymize(self):
         try:

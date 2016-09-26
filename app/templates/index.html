@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Let's Anonymize</h1>
+    <h2>Let's Anonymize</h2>
   <form action="" method="post" name="login">
       {{ form.hidden_tag() }}
       <p>
@@ -10,22 +10,12 @@
            <span style="color: red;">[{{ error }}]</span>
          {% endfor %}<br>
       </p>
-      <p> and like a description:<br>
+      <p> Please enter the type of kata:<br>
         {{ form.description(size=80) }}</p>
         {% for error in form.description.errors %}
            <span style="color: red;">[{{ error }}]</span>
          {% endfor %}<br>
       <p><input type="submit" value="Anonymize!"></p>
-      <hr>
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }} </li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+      <hr><br />
   </form>
-
 {% endblock %}

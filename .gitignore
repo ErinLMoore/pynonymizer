@@ -2,3 +2,4 @@
 set_credentials.py
 *.pyc
 __pycache__
+flask
