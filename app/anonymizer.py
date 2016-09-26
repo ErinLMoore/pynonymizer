@@ -25,7 +25,7 @@ class Anonymizer(object):
             self.status_message = "error cloning and copying repo"
         self.anonymous_url = "https://github.com/{0}/{1}.git".format(self.username, self.anonymous_name)
         self.push_copy_repo(copy_repo)
-        self.result = {'anonymous_url': self.anonymous_url, 'status_message': self.status_message}
+        self.result = {'anonymous_url': self.anonymous_url, 'message': self.status_message}
         self.clean_up_directories()
 
     def get_result(self):

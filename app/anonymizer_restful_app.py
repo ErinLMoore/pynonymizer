@@ -23,17 +23,24 @@ api = Api(app)
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+    result = {'anonymous_url': 'left blank', 'message': 'left blank'}
     user = {'name': 'test'}  # fake user
-
     form = UrlForm()
     if form.validate_on_submit():
-        flash('here is url="%s", &desc=%s' %
-            (form.submission_url.data, str(form.description.data)))
-        return redirect('/index')
-
+        dictToSend ={"url": form.submission_url.data, "description": form.description.data}
+        
+        result = requests.post('http://localhost:5000/api/anonymize', json=dictToSend)
+        #i think we can still put this response in index result
+        flash('New Anonymous URL: {0}'.format(result))
     return render_template('index.html',
-                           user=user,
-                           form=form)
+                           form=form,
+                            result=result)
+
+@app.route('/result', methods=['GET', 'PUT'])
+def result():
+    return render_template('result.html',
+                            result = RESULT)
+
 
 class AnonymizeAPI(Resource):
     def __init__(self):
@@ -71,4 +78,4 @@ class AnonymizeAPI(Resource):
 
 
 
-api.add_resource(AnonymizeAPI, '/api/v1.0/anonymize', endpoint = 'anonymize')
+api.add_resource(AnonymizeAPI, '/api/anonymize', endpoint = 'anonymize')

@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Hi, {{ user.name }}!</h1>
     <h1>Let's Anonymize</h1>
   <form action="" method="post" name="login">
       {{ form.hidden_tag() }}
@@ -16,7 +15,7 @@
         {% for error in form.description.errors %}
            <span style="color: red;">[{{ error }}]</span>
          {% endfor %}<br>
-      <p><input type="submit" value="Sign In"></p>
+      <p><input type="submit" value="Anonymize!"></p>
       <hr>
       {% with messages = get_flashed_messages() %}
       {% if messages %}
