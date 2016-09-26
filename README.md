@@ -1,4 +1,4 @@
-Relies on Python packages `flask` , `flask-restful`, `flask-wtf`, `pygit2`. These can be install with pip.
+Relies on Python packages `flask`, `flask-wtf`, `pygit2`. These can be install with pip.
 
 
 to set up virtual environment, assuming python 3:
