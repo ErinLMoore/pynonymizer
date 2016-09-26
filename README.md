@@ -3,10 +3,11 @@ Relies on Python packages `flask`, `flask-wtf`, `pygit2`. These can be install w
 
 to set up virtual environment, assuming python 3:
 * `pyvenv flask`
-* `flask/bin/pip3 install flask-restful`
-* `flask/bin/pip3 install flask-wtf`
-* `flask/bin/pip3 install requests`
-* `flask/bin/pip3 install pygit2`
+* `flask/bin/pip3 install -r requirements.txt`
+
+Installing pygit2 requires a C library, it can be installed on a mac using
+Homebrew: `brew install libgit2` and on
+Debian using apt: `apt-get install libgit2-dev libffi`
 
 To run: `python3 run.py` will start the server.
 

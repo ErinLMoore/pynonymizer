@@ -1,0 +1,4 @@
+flask-restful
+flask-wtf
+requests
+pygit2
