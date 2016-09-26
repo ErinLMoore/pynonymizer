@@ -15,6 +15,11 @@ with the 3's taken out.)
 
 With the server running, navigate in your browser to localhost:5000. The webpage should be ready for use.
 
+A handy github repo you can use for testing is: `https://github.com/github/testrepo.git`
+
 A new version of the anonymizer module with unit tests is planned.
 
+The anonymizer module can be run as a standalone. use `python3 anonyizer.py <url-to-anonymize> <kata-description>`
+
 NOTE: you will need an additional credentials file to run this. Please contact the creator directly if interested.
+the credentials file goes in root to run the web app, or the same directory as 'anonymizer' to run it by itself.

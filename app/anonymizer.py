@@ -5,12 +5,19 @@ import os
 import shutil
 import sys
 
+import requests
+
+import time
+import datetime
+import hashlib
+
 from set_credentials import git_username, git_password, git_token
 
 class Anonymizer(object):
-    def __init__(self, url_to_anonymize, anonymous_name):
+    def __init__(self, url_to_anonymize, description):
         self.url_to_anonymize = url_to_anonymize
-        self.anonymous_name = anonymous_name
+        self.anonymous_name = self.get_anonymous_name(description)
+        self.create_github_repo(self.anonymous_name)
         self.result = {}
         self.local_copy = "./local_copy"
         self.anonymous_copy = "./anonymous_copy"
@@ -67,6 +74,20 @@ class Anonymizer(object):
         callbacks = git.RemoteCallbacks(credentials = cred)
         return callbacks
 
+    def get_anonymous_name(self, description):
+        tmp = str(time.time())
+        epoch = tmp.encode()
+        myhash = hashlib.md5(epoch).hexdigest()
+        parsed_description = description.replace(" ", "-")
+        return parsed_description + "_" + str(datetime.date.today()) + "_" + myhash[:5]
+
+    def create_github_repo(self, anonymous_name):
+        dictToSend = {"name": anonymous_name}
+        headers = {'Authorization': 'token {0}'.format(git_token)}
+        res = requests.post('https://api.github.com/user/repos', json=dictToSend, headers=headers)
+        print ('response from server:',res.text)
+        dictFromServer = res.json()
+
     def clean_up_directories(self):
         shutil.rmtree(self.local_copy , ignore_errors = True)
         shutil.rmtree(self.anonymous_copy , ignore_errors = True)
@@ -91,3 +112,9 @@ class Anonymizer(object):
                                         ignore)
         else:
             shutil.copyfile(src, dest)
+
+if __name__ == '__main__':
+    anonymizer = Anonymizer(sys.argv[1], sys.argv[2])
+    anonymizer.anonymize()
+    result = anonymizer.get_result()
+    print("Anonymous URL: {0} \n Status: {1}".format(result['anonymous_url'], result['message']))
