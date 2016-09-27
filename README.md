@@ -5,6 +5,7 @@ to set up virtual environment, assuming python 3:
 * `pyvenv flask`
 * `flask/bin/pip3 install -r requirements.txt`
 
+
 Installing pygit2 requires a C library, it can be installed on a mac using
 Homebrew: `brew install libgit2` and on
 Debian using apt: `apt-get install libgit2-dev libffi`
@@ -22,5 +23,9 @@ A new version of the anonymizer module with unit tests is planned.
 
 The anonymizer module can be run as a standalone. use `python3 anonyizer.py <url-to-anonymize> <kata-description>`
 
-NOTE: you will need an additional credentials file to run this. Please contact the creator directly if interested.
-the credentials file goes in root to run the web app, or the same directory as 'anonymizer' to run it by itself.
+The anonymizer relies on the three following environment variables:
+pynonymizer_username
+pynonymizer_password
+pynonymizer_token
+Which are the username, password, and OAuth token of the github repo you want the anonymous katas uploaded to.
+These can be set using the syntax `export example='data'` in the terminal.

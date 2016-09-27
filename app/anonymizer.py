@@ -11,7 +11,14 @@ import time
 import datetime
 import hashlib
 
-from set_credentials import git_username, git_password, git_token
+git_username = git_password = git_token = 'not set'
+
+if "pynonymizer_username" in os.environ:
+    git_username = os.environ["pynonymizer_username"]
+if "pynonymizer_password" in os.environ:
+    git_password = os.environ["pynonymizer_password"]
+if "pynonymizer_token" in os.environ:
+    git_token = os.environ["pynonymizer_token"]
 
 class Anonymizer(object):
     def __init__(self, url_to_anonymize, description):
