@@ -14,5 +14,5 @@ class Anonymizer(object):
         current_time = str(time.time())
         epoch = current_time.encode()
         myhash = hashlib.md5(epoch).hexdigest()
-        parsed_description = re.sub(r'[^\w]', '-', description)
+        parsed_description = re.sub(r'\W', '-', description)
         return parsed_description + "_" + str(date.today()) + "_" + myhash[:5]
