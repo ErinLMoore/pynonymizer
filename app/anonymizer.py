@@ -3,6 +3,7 @@
 import time
 from datetime import date
 import hashlib
+import re
 
 class Anonymizer(object):
 
@@ -13,5 +14,5 @@ class Anonymizer(object):
         current_time = str(time.time())
         epoch = current_time.encode()
         myhash = hashlib.md5(epoch).hexdigest()
-        parsed_description = description.replace(" ", "-")
+        parsed_description = re.sub(r'[^\w]', '-', description)
         return parsed_description + "_" + str(date.today()) + "_" + myhash[:5]
