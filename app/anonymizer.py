@@ -16,3 +16,6 @@ class Anonymizer(object):
         myhash = hashlib.md5(epoch).hexdigest()
         parsed_description = re.sub(r'\W', '-', description)
         return parsed_description + "_" + str(date.today()) + "_" + myhash[:5]
+
+    def create_github_repo(self, anonymous_name):
+        pass

@@ -28,4 +28,4 @@ pynonymizer_username
 pynonymizer_password
 pynonymizer_token
 Which are the username, password, and OAuth token of the github repo you want the anonymous katas uploaded to.
-These can be set using the syntax `export example='data'` in the terminal.
+These can be set using the syntax `export example='data'` in the terminal, or permanently in your shell profile file.
