@@ -19,5 +19,5 @@ class testAnonymizer(unittest.TestCase):
                 mock_date.today.return_value = date(2016, 9, 27)
                 anonymizer = Anonymizer()
                 expected = "my-test_2016-09-27_6b7c5"
-                actual = anonymizer.get_anonymous_name()
+                actual = anonymizer.get_anonymous_name(description)
                 self.assertEqual(expected, actual)
