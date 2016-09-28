@@ -3,6 +3,7 @@
 import unittest
 from mock import patch
 from app.anonymizer import Anonymizer
+import os
 
 class testAnonymizer(unittest.TestCase):
 
@@ -22,13 +23,26 @@ class testAnonymizer(unittest.TestCase):
                 actual = anonymizer.get_anonymous_name(description)
                 self.assertEqual(expected, actual)
 
-    import test.mockgithub
-    from httmock import with_httmock
-    @with_httmock(test.mockgithub.repository)
-    def xtest_create_github_repo(self):
-        username = 'Anonymous-Katas'
-        anonymous_name = 'test_2016-09-27_6b7c5'
-        anonymizer = Anonymizer()
-        results = anonymizer.create_github_repo(anonymous_name)
-        self.assertTrue('name' in results)
-        self.assertEqual(results['name'], anonymous_name)
+
+    from httmock import all_requests
+    @all_requests
+    def response_content(self, url, request):
+        from httmock import response
+        HEADERS = {'content-type': 'application/json'}
+        filename = eval(request.body)
+        file_path = ("test/"+url.netloc+url.path+'/'+filename['name'])
+        with open(file_path, 'r') as f:
+            content = f.read()
+            return response(201, content, HEADERS, None, 5, request)
+
+    def test_create_github_repo(self):
+        from httmock import HTTMock
+        import requests
+        with HTTMock(self.response_content):
+            username = os.environ["pynonymizer_username"]
+            anonymous_name = 'test_2016-09-27_6b7c5'
+            anonymizer = Anonymizer()
+            results = anonymizer.create_github_repo(anonymous_name)
+            resultsdict = eval(results.content)
+            self.assertEqual(resultsdict['full_name'], username+"/tm")
+            self.assertEqual(resultsdict['name'], anonymous_name)

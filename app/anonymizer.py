@@ -29,8 +29,7 @@ class Anonymizer(object):
         return parsed_description + "_" + str(date.today()) + "_" + myhash[:5]
 
     def create_github_repo(self, anonymous_name):
-            dictToSend = {"name": anonymous_name}
-            headers = {'Authorization': 'token {0}'.format(git_token)}
-            response = requests.post('https://api.github.com/user/repos', json=dictToSend)
-            print(response.json())
-            return response.json()
+        dictToSend = {"name": anonymous_name}
+        headers = {'Authorization': 'token {0}'.format(git_token)}
+        response = requests.post('https://api.github.com/user/repos', json=dictToSend, headers=headers)
+        return response

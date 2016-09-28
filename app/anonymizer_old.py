@@ -10,7 +10,6 @@ import requests
 import time
 import datetime
 import hashlib
-#6b7c5759290649225bf21559b1431324
 
 git_username = git_password = git_token = 'not set'
 
