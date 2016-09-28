@@ -10,18 +10,18 @@ class testAnonymizer(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_get_anonymous_name(self):
-        import time
-        from datetime import date
+    from datetime import date
+    @patch('app.anonymizer.date')
+    @patch('app.anonymizer.time')
+    def test_get_anonymous_name(self, mock_time, mock_date):
         description = 'my test!abcdefghijklmnopqrstuvwxyz'
-        with patch('app.anonymizer.time') as mock_time:
-            with patch('app.anonymizer.date') as mock_date:
-                mock_time.time.return_value = 1474998091.10703
-                mock_date.today.return_value = date(2016, 9, 27)
-                anonymizer = Anonymizer()
-                expected = "my-test-abcdefghijklmnopqrstuv_2016-09-27_6b7c5"
-                actual = anonymizer.get_anonymous_name(description)
-                self.assertEqual(expected, actual)
+        mock_time.time.return_value = 1474998091.10703
+        from datetime import date
+        mock_date.today.return_value = date(2016, 9, 27)
+        anonymizer = Anonymizer()
+        expected = "my-test-abcdefghijklmnopqrstuv_2016-09-27_6b7c5"
+        actual = anonymizer.get_anonymous_name(description)
+        self.assertEqual(expected, actual)
 
 
     from httmock import all_requests
